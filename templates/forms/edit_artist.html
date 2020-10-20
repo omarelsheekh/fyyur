@@ -39,4 +39,31 @@
       <input type="submit" value="Edit Artist" class="btn btn-primary btn-lg btn-block">
     </form>
   </div>
+  <script>
+    var nameField= document.getElementById('name')
+    nameField.value= '{{ artist.name }}'
+    var phone= document.getElementById('phone')
+    phone.value= '{{ artist.phone }}'
+    var city= document.getElementById('city')
+    city.value= '{{ artist.city }}'
+    var facebook_link= document.getElementById('facebook_link')
+    facebook_link.value= '{{ artist.facebook_link }}'
+    var image_link= document.getElementById('image_link')
+    image_link.value= '{{ artist.image_link }}'
+    var state= document.getElementById('state')
+    state.value= '{{ artist.state }}'
+    var optionsToSelect = [];
+    var select = document.getElementById( 'genres' );
+    {% for g in artist.genres.split(',') %}
+    optionsToSelect.push( '{{ g }}' )
+    {% endfor %}
+    for ( var i = 0, l = select.options.length, o; i < l; i++ )
+    {
+      o = select.options[i];
+      if ( optionsToSelect.indexOf( o.text ) != -1 )
+      {
+        o.selected = true;
+      }
+    }
+  </script>
 {% endblock %}

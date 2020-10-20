@@ -28,19 +28,31 @@
           {{ form.phone(class_ = 'form-control', placeholder='xxx-xxx-xxxx', autofocus = true) }}
         </div>
       <div class="form-group">
-        <label for="genres">Genres</label>
-        <small>Ctrl+Click to select multiple</small>
-        {{ form.genres(class_ = 'form-control', placeholder='Genres, separated by commas', id=form.state, autofocus = true) }}
-      </div>
-      <div class="form-group">
         <label for="genres">Image Link</label>
-        {{ form.image_link(class_ = 'form-control', placeholder='http://', id=form.state, autofocus = true) }}
+        {{ form.image_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
       </div>
       <div class="form-group">
           <label for="genres">Facebook Link</label>
-          {{ form.facebook_link(class_ = 'form-control', placeholder='http://', id=form.state, autofocus = true) }}
+          {{ form.facebook_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
         </div>
       <input type="submit" value="Edit Venue" class="btn btn-primary btn-lg btn-block">
     </form>
   </div>
+  <script>
+    var nameField= document.getElementById('name')
+    nameField.value= '{{ venue.name }}'
+    var phone= document.getElementById('phone')
+    phone.value= '{{ venue.phone }}'
+    var city= document.getElementById('city')
+    city.value= '{{ venue.city }}'
+    var facebook_link= document.getElementById('facebook_link')
+    facebook_link.value= '{{ venue.facebook_link }}'
+    var image_link= document.getElementById('image_link')
+    image_link.value= '{{ venue.image_link }}'
+    var state= document.getElementById('state')
+    state.value= '{{ venue.state }}'
+    var address= document.getElementById('address')
+    address.value= '{{ venue.address }}'
+    
+  </script>
 {% endblock %}
