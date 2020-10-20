@@ -10,7 +10,7 @@ from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 import logging
 from logging import Formatter, FileHandler
-from flask_wtf import Form
+from flask_wtf import FlaskForm as Form
 from flask_migrate import Migrate
 from forms import *
 #----------------------------------------------------------------------------#
@@ -22,7 +22,7 @@ moment = Moment(app)
 app.config.from_object('config')
 db = SQLAlchemy(app)
 
-# TODO: connect to a local postgresql database
+# connect to a local postgresql database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///fyyur'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 migrate=Migrate(app,db)
@@ -112,7 +112,7 @@ def venues():
       "num_upcoming_shows": 0,
     }]
   }]
-  return render_template('pages/venues.html', areas=data);
+  return render_template('pages/venues.html', areas=data)
 
 @app.route('/venues/search', methods=['POST'])
 def search_venues():
@@ -419,11 +419,25 @@ def create_artist_submission():
   # called upon submitting the new artist listing form
   # TODO: insert form data as a new Venue record in the db, instead
   # TODO: modify data to be the data object returned from db insertion
-
-  # on successful db insert, flash success
-  flash('Artist ' + request.form['name'] + ' was successfully listed!')
-  # TODO: on unsuccessful db insert, flash an error instead.
-  # e.g., flash('An error occurred. Artist ' + data.name + ' could not be listed.')
+  try:
+    artist=Artist(
+      name=request.form.get('name'),
+      city=request.form.get('city'),
+      state=request.form.get('state'),
+      phone=request.form.get('phone'),
+      genres=','.join(request.form.getlist('genres')),
+      facebook_link=request.form.get('facebook_link'),
+      image_link=request.form.get('image_link')
+    )
+    db.session.add(artist)
+    db.session.commit()
+    # on successful db insert, flash success
+    flash('Artist ' + request.form['name'] + ' was successfully listed!')
+  except:
+    db.session.rollback()
+    # TODO: on unsuccessful db insert, flash an error instead.
+    flash('An error occurred. Artist ' + request.form['name'] + ' could not be listed.')
+  
   return render_template('pages/home.html')
 
 
@@ -516,7 +530,7 @@ if not app.debug:
 
 # Default port:
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=False)
 
 # Or specify port manually:
 '''
