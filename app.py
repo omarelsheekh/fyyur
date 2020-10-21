@@ -104,14 +104,15 @@ def venues():
       self.city=city
       self.venues=venues
   areas=[]
-  # replace with real venues data.
-  #       num_shows should be aggregated based on number of upcoming shows per venue.
-  q= db.engine.execute('select distinct state,city from \"Venue\" ').fetchall()
-  for r in q:
-    state=r[0]
-    city=r[1]
-    area=Area(r[0],r[1],Venue.query.filter_by(city=city).filter_by(state=state).all())
-    areas.append(area)
+
+  q=Venue.query.order_by('state','city').all()
+  for v in q:
+    if len(areas)==0:
+      areas.append(Area(v.state,v.city,[]))
+    elif not (areas[len(areas)-1].state==v.state and areas[len(areas)-1].city == v.city):
+        areas.append(Area(v.state,v.city,[]))
+    areas[len(areas)-1].venues.append(v)
+
   return render_template('pages/venues.html', areas=areas)
 
 @app.route('/venues/search', methods=['POST'])
